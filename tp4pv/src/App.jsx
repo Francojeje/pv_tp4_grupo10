@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ProductoForm from './components/ProductoForm';
 import ProductoList from './components/ProductoList';
 import ProductoSearch from './components/ProductoSearch';
+import './App.css'; // Importa el archivo de estilos
 
 const App = () => {
   const [productos, setProductos] = useState([]);
@@ -31,10 +32,12 @@ const App = () => {
   );
 
   return (
-    <div>
+    <div className="app-container">
       <h1>Gestión de Productos</h1>
-      <ProductoForm onGuardar={agregarProducto} producto={editando} />
-      <ProductoSearch valor={busqueda} onBuscar={setBusqueda} />
+      <div className="panel">
+        <ProductoForm onGuardar={agregarProducto} producto={editando} />
+        <ProductoSearch valor={busqueda} onBuscar={setBusqueda} />
+      </div>
       <ProductoList
         productos={productosFiltrados}
         onEliminar={eliminarProducto}
