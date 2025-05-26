@@ -35,6 +35,17 @@ button {
   margin: 4px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.15);
 }
+.boton {
+  background: #222;
+  color: #f1f1f1;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  margin-left: 40px;
+}
 
 button:hover, button:focus {
   background: #0078d4;

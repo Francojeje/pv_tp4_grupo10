@@ -8,8 +8,8 @@ const ProductoList = ({ productos, onEliminar, onEditar }) => {
         {productos.map(p => (
           <li key={p.id} className="producto-item">
             #{p.id} - {p.descripcion} - ${p.precio}
-            <button onClick={() => onEditar(p)}>✏️ Editar</button>
-            <button onClick={() => onEliminar(p.id)}>🗑️ Eliminar</button>
+            <button className='boton' onClick={() => onEditar(p)}>✏️ Editar</button>
+            <button className='boton' onClick={() => onEliminar(p.id)}>🗑️ Eliminar</button>
           </li>
         ))}
       </ul>
