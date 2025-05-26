@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import ProductoForm from './components/ProductoForm';
 import ProductoList from './components/ProductoList';
 import ProductoSearch from './components/ProductoSearch';
-import './App.css'; // Importa el archivo de estilos
+import './App.css'; 
 
 const App = () => {
-  const [productos, setProductos] = useState([]);
+  const [productos, setProductos] = useState(() => {
+    const guardados = localStorage.getItem('productos');
+    return guardados ? JSON.parse(guardados) : [];
+  });
   const [busqueda, setBusqueda] = useState("");
   const [editando, setEditando] = useState(null);
 
@@ -26,10 +29,18 @@ const App = () => {
     setEditando(producto);
   };
 
-  const productosFiltrados = productos.filter(p =>
-    p.descripcion.toLowerCase().includes(busqueda.toLowerCase()) ||
-    String(p.id).includes(busqueda)
+  const productosFiltrados = useMemo(() =>
+    productos.filter(p =>
+      p.descripcion.toLowerCase().includes(busqueda.toLowerCase()) ||
+      String(p.id).includes(busqueda)
+    ),
+    [productos, busqueda]
   );
+
+  
+  useEffect(() => {
+    localStorage.setItem('productos', JSON.stringify(productos));
+  }, [productos]);
 
   return (
     <div className="app-container">
@@ -38,6 +49,12 @@ const App = () => {
         <ProductoForm onGuardar={agregarProducto} producto={editando} />
         <ProductoSearch valor={busqueda} onBuscar={setBusqueda} />
       </div>
+      {productos.length === 0 && (
+        <div className="mensaje-info">No hay productos cargados.</div>
+      )}
+      {productos.length > 0 && productosFiltrados.length === 0 && (
+        <div className="mensaje-info">No se encontraron productos con esa búsqueda.</div>
+      )}
       <ProductoList
         productos={productosFiltrados}
         onEliminar={eliminarProducto}
