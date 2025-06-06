@@ -39,8 +39,8 @@ const App = () => {
 
   
   useEffect(() => {
-    localStorage.setItem('productos', JSON.stringify(productos));
-  }, [productos]);
+  localStorage.setItem('productos', JSON.stringify(productos));
+}, [productos]);
 
   return (
     <div className="app-container">

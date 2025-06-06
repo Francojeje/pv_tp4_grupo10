@@ -4,20 +4,31 @@ const ProductoForm = ({ onGuardar, producto }) => {
   const [descripcion, setDescripcion] = useState("");
   const [precio, setPrecio] = useState("");
 
-  useEffect(() => {
-    if (producto) {
-      setDescripcion(producto.descripcion);
-      setPrecio(producto.precio);
-    }
-  }, [producto]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!descripcion || !precio) return;
-    onGuardar({ id: producto?.id, descripcion, precio: parseFloat(precio) });
+useEffect(() => {
+  if (producto) {
+    setDescripcion(producto.descripcion || "");
+    setPrecio(producto.precio || "");
+  } else {
     setDescripcion("");
     setPrecio("");
-  };
+  }
+}, [producto]);
+
+const handleSubmit = (e) => {
+  e.preventDefault();
+  if (!descripcion.trim()) {
+    alert("La descripción es obligatoria.");
+    return;
+  }
+  if (isNaN(precio) || parseFloat(precio) <= 0) {
+    alert("El precio debe ser un número positivo.");
+    return;
+  }
+
+  onGuardar({ id: producto?.id, descripcion, precio: parseFloat(precio) });
+  setDescripcion("");
+  setPrecio("");
+};
 
   return (
     <form onSubmit={handleSubmit}>

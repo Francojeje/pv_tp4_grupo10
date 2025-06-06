@@ -1,2 +1,6 @@
+Participantes
 1_ Almaraz, Franco Manuel - user: francojeje
 2_ Vilte, Santiago Rodrigo - user: santiagovilte
+
+Descripcion del proyecto
+Gestión de Productos es una aplicación web en React que permite agregar, editar, eliminar y buscar productos. Los datos se almacenan en localStorage, y la interfaz incluye formularios con validación, búsqueda en tiempo real y una lista interactiva de productos.
