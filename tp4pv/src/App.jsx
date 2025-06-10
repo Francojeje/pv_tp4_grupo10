@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import ProductoForm from './components/ProductoForm';
 import ProductoList from './components/ProductoList';
 import ProductoSearch from './components/ProductoSearch';
 import './App.css'; 
-
 const App = () => {
   const [productos, setProductos] = useState(() => {
     const guardados = localStorage.getItem('productos');
@@ -12,22 +11,22 @@ const App = () => {
   const [busqueda, setBusqueda] = useState("");
   const [editando, setEditando] = useState(null);
 
-  const agregarProducto = (producto) => {
-    if (editando) {
-      setProductos(productos.map(p => p.id === producto.id ? producto : p));
-      setEditando(null);
-    } else {
-      setProductos([...productos, { ...producto, id: Date.now() }]);
-    }
-  };
+const agregarProducto = useCallback((producto) => {
+  setProductos(prev =>
+    producto.id
+      ? prev.map(p => p.id === producto.id ? producto : p)
+      : [...prev, { ...producto, id: Date.now() }]
+  );
+  setEditando(null);
+}, []);
 
-  const eliminarProducto = (id) => {
-    setProductos(productos.filter(p => p.id !== id));
-  };
+const eliminarProducto = useCallback((id) => {
+  setProductos(prev => prev.filter(p => p.id !== id));
+}, []);
 
-  const editarProducto = (producto) => {
-    setEditando(producto);
-  };
+const editarProducto = useCallback((producto) => {
+  setEditando(producto);
+}, []);
 
   const productosFiltrados = useMemo(() =>
     productos.filter(p =>
@@ -37,7 +36,6 @@ const App = () => {
     [productos, busqueda]
   );
 
-  
   useEffect(() => {
   localStorage.setItem('productos', JSON.stringify(productos));
 }, [productos]);

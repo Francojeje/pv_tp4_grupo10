@@ -2,33 +2,51 @@ import React, { useState, useEffect } from 'react';
 
 const ProductoForm = ({ onGuardar, producto }) => {
   const [descripcion, setDescripcion] = useState("");
-  const [precio, setPrecio] = useState("");
+  const [precioUnitario, setPrecioUnitario] = useState("");
+  const [descuento, setDescuento] = useState("");
+  const [stock, setStock] = useState("");
 
-useEffect(() => {
-  if (producto) {
-    setDescripcion(producto.descripcion || "");
-    setPrecio(producto.precio || "");
-  } else {
+  useEffect(() => {
+    if (producto) {
+      setDescripcion(producto.descripcion || "");
+      setPrecioUnitario(producto.precioUnitario || "");
+      setDescuento(producto.descuento || "");
+      setStock(producto.stock || "");
+    } else {
+      setDescripcion("");
+      setPrecioUnitario("");
+      setDescuento("");
+      setStock("");
+    }
+  }, [producto]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const precio = parseFloat(precioUnitario);
+    const desc = parseFloat(descuento) || 0;
+    const stockNum = parseInt(stock);
+
+    if (!descripcion.trim() || isNaN(precio) || precio <= 0 || isNaN(stockNum) || stockNum < 0) {
+      alert("Todos los campos son obligatorios y deben tener valores válidos.");
+      return;
+    }
+
+    const precioConDescuento = precio * (1 - desc / 100);
+
+    onGuardar({
+      id: producto?.id,
+      descripcion,
+      precioUnitario: precio,
+      descuento: desc,
+      precioConDescuento,
+      stock: stockNum,
+    });
+
     setDescripcion("");
-    setPrecio("");
-  }
-}, [producto]);
-
-const handleSubmit = (e) => {
-  e.preventDefault();
-  if (!descripcion.trim()) {
-    alert("La descripción es obligatoria.");
-    return;
-  }
-  if (isNaN(precio) || parseFloat(precio) <= 0) {
-    alert("El precio debe ser un número positivo.");
-    return;
-  }
-
-  onGuardar({ id: producto?.id, descripcion, precio: parseFloat(precio) });
-  setDescripcion("");
-  setPrecio("");
-};
+    setPrecioUnitario("");
+    setDescuento("");
+    setStock("");
+  };
 
   return (
     <form onSubmit={handleSubmit}>
@@ -41,9 +59,21 @@ const handleSubmit = (e) => {
       />
       <input
         type="number"
-        placeholder="Precio"
-        value={precio}
-        onChange={(e) => setPrecio(e.target.value)}
+        placeholder="Precio Unitario"
+        value={precioUnitario}
+        onChange={(e) => setPrecioUnitario(e.target.value)}
+      />
+      <input
+        type="number"
+        placeholder="Descuento (%)"
+        value={descuento}
+        onChange={(e) => setDescuento(e.target.value)}
+      />
+      <input
+        type="number"
+        placeholder="Stock"
+        value={stock}
+        onChange={(e) => setStock(e.target.value)}
       />
       <button type="submit">{producto ? "Guardar cambios" : "Agregar"}</button>
     </form>
